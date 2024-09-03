@@ -124,14 +124,14 @@ if (5 < 10) {
 				i, tt.expectedLiteral, tok.Literal)
 		}
 
-		if tok.LineNumber != tt.expectedLineNumber {
+		if tok.Position.LineNumber != tt.expectedLineNumber {
 			t.Fatalf("tests[%d] - line number wrong. expected=%d, got=%d",
-				i, tt.expectedLineNumber, tok.LineNumber)
+				i, tt.expectedLineNumber, tok.Position.LineNumber)
 		}
 
-		if tok.LineNumber != tt.expectedLineNumber {
+		if tok.Position.ColumnNumber != tt.expectedColumnNumber {
 			t.Fatalf("tests[%d] - column number wrong. expected=%d, got=%d",
-				i, tt.expectedColumnNumber, tok.ColumnNumber)
+				i, tt.expectedColumnNumber, tok.Position.ColumnNumber)
 		}
 
 	}

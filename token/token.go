@@ -3,10 +3,23 @@ package token
 type TokenType string
 
 type Token struct {
-	Type         TokenType
-	Literal      string
+	Type     TokenType
+	Literal  string
+	Position LexerPosition
+}
+
+type LexerPosition struct {
 	LineNumber   int
 	ColumnNumber int
+}
+
+func (lp *LexerPosition) Advance(ch byte) {
+	if string(ch) != "\n" {
+		lp.ColumnNumber++
+	} else {
+		lp.LineNumber++
+		lp.ColumnNumber = 1
+	}
 }
 
 const (
