@@ -28,6 +28,7 @@ var precedences = map[token.TokenType]int{
 	token.MINUS:    SUM,
 	token.SLASH:    PRODUCT,
 	token.ASTERISK: PRODUCT,
+	token.LPAREN:   CALL,
 }
 
 type Parser struct {
@@ -76,6 +77,7 @@ func New(l *lexer.Lexer) *Parser {
 	p.registerInfix(token.NOT_EQ, p.parseInfixExpression)
 	p.registerInfix(token.LT, p.parseInfixExpression)
 	p.registerInfix(token.GT, p.parseInfixExpression)
+	p.registerInfix(token.LPAREN, p.parseCallExpression)
 
 	return p
 }
@@ -371,4 +373,31 @@ func (p *Parser) parseFunctionLiteral() ast.Expression {
 	fun.Body = p.parseBlockStatement()
 
 	return fun
+}
+
+func (p *Parser) parseCallExpression(fun ast.Expression) ast.Expression {
+	return &ast.CallExpression{
+		Token:     p.curToken,
+		Function:  fun,
+		Arguments: p.parseCallArguments(),
+	}
+}
+
+func (p *Parser) parseCallArguments() []ast.Expression {
+	args := []ast.Expression{}
+
+	p.nextToken()
+	for !p.curTokenIs(token.RPAREN) {
+		if p.curTokenIs(token.COMMA) {
+			p.nextToken()
+			continue
+		}
+
+		arg := p.parseExpression(LOWEST)
+		args = append(args, arg)
+
+		p.nextToken()
+	}
+
+	return args
 }
