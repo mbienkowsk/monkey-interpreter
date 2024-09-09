@@ -38,6 +38,10 @@ func Eval(node ast.Node) object.Object {
 
 	case *ast.IfExpression:
 		return evalIfStatement(node)
+
+	case *ast.ReturnStatement:
+		val := Eval(node.ReturnValue)
+		return &object.ReturnValue{Value: val}
 	}
 
 	return nil
@@ -48,6 +52,10 @@ func evalStatements(stmts []ast.Statement) object.Object {
 
 	for _, statement := range stmts {
 		result = Eval(statement)
+
+		if rv, ok := result.(*object.ReturnValue); ok {
+			return rv.Value
+		}
 	}
 	return result
 }
