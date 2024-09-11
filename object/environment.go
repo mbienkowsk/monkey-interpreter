@@ -1,12 +1,12 @@
 package object
 
+type Environment struct {
+	store map[string]Object
+}
+
 func NewEnvironment() *Environment {
 	s := make(map[string]Object)
 	return &Environment{store: s}
-}
-
-type Environment struct {
-	store map[string]Object
 }
 
 func (e *Environment) Get(name string) (Object, bool) {
