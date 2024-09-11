@@ -79,6 +79,7 @@ func Eval(node ast.Node, env *object.Environment) object.Object {
 		return &object.Function{
 			Parameters: node.Parameters,
 			Body:       node.Body,
+			Env:        env,
 		}
 
 	case *ast.CallExpression:
@@ -255,24 +256,58 @@ func evalCallExpression(
 	node *ast.CallExpression,
 	env *object.Environment,
 ) object.Object {
-	fun, ok := Eval(node.Function, env).(*object.Function)
-	if !ok {
-		return newError("function %s not found in the namespace", node.Function)
+	fun := Eval(node.Function, env).(*object.Function)
+	if isError(fun) {
+		return newError("error evaluating %s", node.Function)
 	}
 
-	prevEnv := fun.Env
-	defer func() { fun.Env = prevEnv }() // nested calls - previous environment has to be preserved
-	fun.Env = object.NewEnvironment()
+	args := evalExpressions(node.Arguments, env)
+	return applyFunction(fun, args)
 
-	for i, arg := range node.Arguments {
+}
+
+func evalExpressions(exps []ast.Expression, env *object.Environment) []object.Object {
+	var result []object.Object
+
+	for _, arg := range exps {
 		evaluated := Eval(arg, env)
 
 		if isError(evaluated) {
-			return evaluated
+			return []object.Object{evaluated}
 		}
 
-		fun.Env.Set(fun.Parameters[i].Value, evaluated)
+		result = append(result, evaluated)
 	}
 
-	return Eval(fun.Body, fun.Env)
+	return result
+}
+
+func applyFunction(fn object.Object, args []object.Object) object.Object {
+	function, ok := fn.(*object.Function)
+	if !ok {
+		return newError("not a function: %s", fn.Type())
+	}
+
+	env := extendFunctionEnv(function, args)
+	evaluated := Eval(function.Body, env)
+
+	return unwrapReturnValue(evaluated)
+}
+
+func extendFunctionEnv(fn *object.Function, args []object.Object) *object.Environment {
+	env := object.NewEnclosedEnvironment(fn.Env)
+
+	for i, param := range fn.Parameters {
+		env.Set(param.Value, args[i])
+	}
+
+	return env
+}
+
+func unwrapReturnValue(obj object.Object) object.Object {
+	if returnValue, ok := obj.(*object.ReturnValue); ok {
+		return returnValue.Value
+	}
+
+	return obj
 }
