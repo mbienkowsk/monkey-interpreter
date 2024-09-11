@@ -74,6 +74,15 @@ func Eval(node ast.Node, env *object.Environment) object.Object {
 
 	case *ast.Identifier:
 		return evalIdentifier(node, env)
+
+	case *ast.FunctionLiteral:
+		return &object.Function{
+			Parameters: node.Parameters,
+			Body:       node.Body,
+		}
+
+	case *ast.CallExpression:
+		return evalCallExpression(node, env)
 	}
 
 	return nil
@@ -240,4 +249,30 @@ func evalIdentifier(
 		return newError("identifier not found: " + node.Value)
 	}
 	return val
+}
+
+func evalCallExpression(
+	node *ast.CallExpression,
+	env *object.Environment,
+) object.Object {
+	fun, ok := Eval(node.Function, env).(*object.Function)
+	if !ok {
+		return newError("function %s not found in the namespace", node.Function)
+	}
+
+	prevEnv := fun.Env
+	defer func() { fun.Env = prevEnv }() // nested calls - previous environment has to be preserved
+	fun.Env = object.NewEnvironment()
+
+	for i, arg := range node.Arguments {
+		evaluated := Eval(arg, env)
+
+		if isError(evaluated) {
+			return evaluated
+		}
+
+		fun.Env.Set(fun.Parameters[i].Value, evaluated)
+	}
+
+	return Eval(fun.Body, fun.Env)
 }
