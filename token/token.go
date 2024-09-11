@@ -61,6 +61,8 @@ const (
 	MINUS    = "-"
 	SLASH    = "/"
 	ASTERISK = "*"
+
+	STRING = "STRING"
 )
 
 var keywords = map[string]TokenType{

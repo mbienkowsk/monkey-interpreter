@@ -20,6 +20,7 @@ let result = add(five, ten);
 if (5 < 10) {
 	return true;
 } else {
+	let a = "string_val";
 	return false;
 }
 
@@ -94,19 +95,24 @@ if (5 < 10) {
 		{token.RBRACE, "}", 14, 1},
 		{token.ELSE, "else", 14, 3},
 		{token.LBRACE, "{", 14, 8},
-		{token.RETURN, "return", 15, 2},
-		{token.FALSE, "false", 15, 9},
-		{token.SEMICOLON, ";", 15, 14},
-		{token.RBRACE, "}", 16, 1},
-		{token.INT, "10", 18, 1},
-		{token.EQ, "==", 18, 4},
-		{token.INT, "10", 18, 7},
-		{token.SEMICOLON, ";", 18, 9},
+		{token.LET, "let", 15, 2},
+		{token.IDENT, "a", 15, 6},
+		{token.ASSIGN, "=", 15, 8},
+		{token.STRING, "string_val", 15, 10},
+		{token.SEMICOLON, ";", 15, 22},
+		{token.RETURN, "return", 16, 2},
+		{token.FALSE, "false", 16, 9},
+		{token.SEMICOLON, ";", 16, 14},
+		{token.RBRACE, "}", 17, 1},
 		{token.INT, "10", 19, 1},
-		{token.NOT_EQ, "!=", 19, 4},
-		{token.INT, "9", 19, 7},
-		{token.SEMICOLON, ";", 19, 8},
-		{token.EOF, "", 20, 1},
+		{token.EQ, "==", 19, 4},
+		{token.INT, "10", 19, 7},
+		{token.SEMICOLON, ";", 19, 9},
+		{token.INT, "10", 20, 1},
+		{token.NOT_EQ, "!=", 20, 4},
+		{token.INT, "9", 20, 7},
+		{token.SEMICOLON, ";", 20, 8},
+		{token.EOF, "", 21, 1},
 	}
 
 	l := New(input)

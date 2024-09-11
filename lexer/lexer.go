@@ -96,6 +96,10 @@ func (l *Lexer) NextToken() token.Token {
 		tok.Position = l.lPosition
 		tok.Literal = ""
 		tok.Type = token.EOF
+	case '"':
+		tok.Position = l.lPosition
+		tok.Literal = l.readString()
+		tok.Type = token.STRING
 	default:
 		tok.Position = l.lPosition
 		if isLetter(l.ch) {
@@ -152,4 +156,15 @@ func (l *Lexer) peekChar() byte {
 	} else {
 		return l.input[l.readPosition]
 	}
+}
+
+func (l *Lexer) readString() string {
+	l.readChar() // skip the first quote
+	start_position := l.position
+
+	for l.ch != '"' && l.ch != 0 { // todo: error handling, escaping
+		l.NextToken()
+	}
+
+	return l.input[start_position:l.position]
 }
