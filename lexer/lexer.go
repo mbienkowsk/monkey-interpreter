@@ -163,8 +163,9 @@ func (l *Lexer) readString() string {
 	start_position := l.position
 
 	for l.ch != '"' && l.ch != 0 { // todo: error handling, escaping
-		l.NextToken()
+		l.readChar()
 	}
+	end_position := l.position
 
-	return l.input[start_position:l.position]
+	return l.input[start_position:end_position]
 }
