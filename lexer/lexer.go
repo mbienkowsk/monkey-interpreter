@@ -92,14 +92,18 @@ func (l *Lexer) NextToken() token.Token {
 		tok = newToken(token.SLASH, l.ch, l.lPosition)
 	case '*':
 		tok = newToken(token.ASTERISK, l.ch, l.lPosition)
-	case 0:
-		tok.Position = l.lPosition
-		tok.Literal = ""
-		tok.Type = token.EOF
 	case '"':
 		tok.Position = l.lPosition
 		tok.Literal = l.readString()
 		tok.Type = token.STRING
+	case '[':
+		tok = newToken(token.LBRACKET, l.ch, l.lPosition)
+	case ']':
+		tok = newToken(token.RBRACKET, l.ch, l.lPosition)
+	case 0:
+		tok.Position = l.lPosition
+		tok.Literal = ""
+		tok.Type = token.EOF
 	default:
 		tok.Position = l.lPosition
 		if isLetter(l.ch) {
