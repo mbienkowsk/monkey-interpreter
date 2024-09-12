@@ -69,6 +69,7 @@ func New(l *lexer.Lexer) *Parser {
 	p.registerPrefix(token.IF, p.parseIfExpression)
 	p.registerPrefix(token.FUNCTION, p.parseFunctionLiteral)
 	p.registerPrefix(token.STRING, p.parseStringLiteral)
+	p.registerPrefix(token.LBRACKET, p.parseArrayLiteral)
 
 	p.registerInfix(token.PLUS, p.parseInfixExpression)
 	p.registerInfix(token.MINUS, p.parseInfixExpression)
@@ -385,27 +386,8 @@ func (p *Parser) parseCallExpression(fun ast.Expression) ast.Expression {
 	return &ast.CallExpression{
 		Token:     p.curToken,
 		Function:  fun,
-		Arguments: p.parseCallArguments(),
+		Arguments: p.parseCommaSeparatedExpressions(token.RPAREN),
 	}
-}
-
-func (p *Parser) parseCallArguments() []ast.Expression {
-	args := []ast.Expression{}
-
-	p.nextToken()
-	for !p.curTokenIs(token.RPAREN) {
-		if p.curTokenIs(token.COMMA) {
-			p.nextToken()
-			continue
-		}
-
-		arg := p.parseExpression(LOWEST)
-		args = append(args, arg)
-
-		p.nextToken()
-	}
-
-	return args
 }
 
 func (p *Parser) parseStringLiteral() ast.Expression {
@@ -413,4 +395,35 @@ func (p *Parser) parseStringLiteral() ast.Expression {
 		Token: p.curToken,
 		Value: p.curToken.Literal,
 	}
+}
+
+func (p *Parser) parseArrayLiteral() ast.Expression {
+	arr := &ast.ArrayLiteral{
+		Token:    p.curToken,
+		Elements: p.parseCommaSeparatedExpressions(token.RBRACKET),
+	}
+	return arr
+}
+
+func (p *Parser) parseCommaSeparatedExpressions(
+	terminator token.TokenType,
+) []ast.Expression {
+	elems := []ast.Expression{}
+
+	p.nextToken()
+	for !p.curTokenIs(terminator) {
+		if p.curTokenIs(token.COMMA) {
+			p.nextToken()
+			continue
+		}
+
+		elem := p.parseExpression(LOWEST)
+
+		elems = append(elems, elem)
+
+		p.nextToken()
+	}
+
+	return elems
+
 }
