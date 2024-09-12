@@ -95,3 +95,22 @@ type Builtin struct {
 
 func (*Builtin) Type() ObjectType  { return BUILTIN_OBJ }
 func (b *Builtin) Inspect() string { return "builtin function" }
+
+type Array struct {
+	Elements []Object
+}
+
+func (a *Array) Type() ObjectType { return "ARRAY" }
+func (a *Array) Inspect() string {
+	var out bytes.Buffer
+	elements := []string{}
+
+	for _, el := range a.Elements {
+		elements = append(elements, fmt.Sprintf("%v", el))
+	}
+
+	out.WriteString("[")
+	out.WriteString(strings.Join(elements, ", "))
+	out.WriteString("]")
+	return out.String()
+}
