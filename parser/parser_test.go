@@ -809,3 +809,18 @@ func TestParsingIndexExpressions(t *testing.T) {
 		return
 	}
 }
+
+func TestUnterminatedBlockStatement(t *testing.T) {
+	input := "let a = fn() {"
+	l := lexer.New(input)
+	p := New(l)
+	p.ParseProgram()
+
+	if len(p.Errors()) != 1 {
+		t.Fatalf("expected 1 error, got %d", len(p.Errors()))
+	}
+
+	if p.Errors()[0] != "unterminated block statement" {
+		t.Fatalf("expected error message not found")
+	}
+}

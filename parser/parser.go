@@ -336,14 +336,24 @@ func (p *Parser) parseBlockStatement() *ast.BlockStatement {
 
 	p.nextToken()
 
-	for !p.curTokenIs(token.RBRACE) {
-		stmt := p.parseStatement()
-		if stmt != nil {
-			block.Statements = append(block.Statements, stmt)
+	for {
+		switch p.curToken.Type {
+		case token.RBRACE:
+			return block
+
+		case token.EOF:
+			msg := "unterminated block statement"
+			p.errors = append(p.errors, msg)
+			return nil
+
+		default:
+			stmt := p.parseStatement()
+			if stmt != nil {
+				block.Statements = append(block.Statements, stmt)
+			}
+			p.nextToken()
 		}
-		p.nextToken()
 	}
-	return block
 }
 
 func (p *Parser) parseFunctionParameters() []*ast.Identifier {
