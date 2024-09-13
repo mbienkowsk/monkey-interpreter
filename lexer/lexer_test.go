@@ -27,6 +27,7 @@ if (5 < 10) {
 10 == 10;
 10 != 9;
 [1, 2]
+{"jonk boteko":"heart didi"}
 `
 
 	tests := []struct {
@@ -118,7 +119,12 @@ if (5 < 10) {
 		{token.COMMA, ",", 21, 3},
 		{token.INT, "2", 21, 5},
 		{token.RBRACKET, "]", 21, 6},
-		{token.EOF, "", 22, 1},
+		{token.LBRACE, "{", 22, 1},
+		{token.STRING, "jonk boteko", 22, 2},
+		{token.COLON, ":", 22, 15},
+		{token.STRING, "heart didi", 22, 16},
+		{token.RBRACE, "}", 22, 28},
+		{token.EOF, "", 23, 1},
 	}
 
 	l := New(input)

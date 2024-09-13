@@ -100,6 +100,8 @@ func (l *Lexer) NextToken() token.Token {
 		tok = newToken(token.LBRACKET, l.ch, l.lPosition)
 	case ']':
 		tok = newToken(token.RBRACKET, l.ch, l.lPosition)
+	case ':':
+		tok = newToken(token.COLON, l.ch, l.lPosition)
 	case 0:
 		tok.Position = l.lPosition
 		tok.Literal = ""
