@@ -107,7 +107,7 @@ func (a *Array) Inspect() string {
 	elements := []string{}
 
 	for _, el := range a.Elements {
-		elements = append(elements, fmt.Sprintf("%v", el))
+		elements = append(elements, el.Inspect())
 	}
 
 	out.WriteString("[")
