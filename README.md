@@ -72,3 +72,7 @@ go run main.go
 ```sh
 go run main.go [file_path]
 ```
+
+### Examples
+
+Check out the `examples` folder to see how monkey functions in practice:)
