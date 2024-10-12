@@ -20,8 +20,13 @@ func TestEvalIntegerExpression(t *testing.T) {
 		{"5 + 5 + 5 + 5 - 10", 10},
 		{"2 * 2 * 2 * 2 * 2", 32},
 		{"-50 + 100 + -50", 0},
+		{"3 % 2", 1},
 		{"5 * 2 + 10", 20},
 		{"5 + 2 * 10", 25},
+		{"5 % 2 * 10", 10},
+		{"5 * 2 % 10", 0},
+		{"12 % (3 + 2)", 2},
+		{"12 / 3 % 2", 0},
 		{"20 + 2 * -10", 0},
 		{"50 / 2 * 2 + 10", 60},
 		{"2 * (5 + 10)", 30},
@@ -463,6 +468,10 @@ func TestArrayIndexExpressions(t *testing.T) {
 			3,
 		},
 		{
+			"[1, 2, 3][17 % 3]",
+			3,
+		},
+		{
 			"let i = 0; [1][i];",
 			1,
 		},
@@ -480,6 +489,10 @@ func TestArrayIndexExpressions(t *testing.T) {
 		},
 		{
 			"let myArray = [1, 2, 3]; let i = myArray[0]; myArray[i]",
+			2,
+		},
+		{
+			"let myArray = [1, 2, 3]; let i = myArray[2]; myArray[i % 2]",
 			2,
 		},
 		{

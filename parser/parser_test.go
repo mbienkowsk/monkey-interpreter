@@ -285,6 +285,7 @@ func TestParsingInfixExpressions(t *testing.T) {
 		{"5 < 5;", 5, "<", 5},
 		{"5 == 5;", 5, "==", 5},
 		{"5 != 5;", 5, "!=", 5},
+		{"5 % 5;", 5, "%", 5},
 		{"true == true", true, "==", true},
 		{"true != false", true, "!=", false},
 		{"false == false", false, "==", false},
@@ -434,6 +435,26 @@ func TestOperatorPrecedenceParsing(t *testing.T) {
 		{
 			"foo(1)[2]",
 			"(foo(1)[2])",
+		},
+		{
+			"1 + 4 % 2",
+			"(1 + (4 % 2))",
+		},
+		{
+			"2 * 2 % 3",
+			"((2 * 2) % 3)",
+		},
+		{
+			"5 % 2 * 3",
+			"((5 % 2) * 3)",
+		},
+		{
+			"a[5 % 2]",
+			"(a[(5 % 2)])",
+		},
+		{
+			"foo(2 % 3)",
+			"foo((2 % 3))",
 		},
 	}
 	for _, tt := range tests {

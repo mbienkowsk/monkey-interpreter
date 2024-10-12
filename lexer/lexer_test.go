@@ -27,7 +27,7 @@ if (5 < 10) {
 10 == 10;
 10 != 9;
 [1, 2]
-{"jonk boteko":"heart didi"}
+{"jonk boteko":"heart didi"}%
 `
 
 	tests := []struct {
@@ -124,6 +124,7 @@ if (5 < 10) {
 		{token.COLON, ":", 22, 15},
 		{token.STRING, "heart didi", 22, 16},
 		{token.RBRACE, "}", 22, 28},
+		{token.MOD, "%", 22, 29},
 		{token.EOF, "", 23, 1},
 	}
 

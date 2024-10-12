@@ -88,6 +88,8 @@ func (l *Lexer) NextToken() token.Token {
 		}
 	case '-':
 		tok = newToken(token.MINUS, l.ch, l.lPosition)
+	case '%':
+		tok = newToken(token.MOD, l.ch, l.lPosition)
 	case '/':
 		tok = newToken(token.SLASH, l.ch, l.lPosition)
 	case '*':

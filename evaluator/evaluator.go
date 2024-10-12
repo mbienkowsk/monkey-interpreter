@@ -205,6 +205,8 @@ func evalIntegerInfixExpression(left, right object.Object, operator string) obje
 		return &object.Integer{Value: leftVal * rightVal}
 	case token.SLASH:
 		return &object.Integer{Value: leftVal / rightVal}
+	case token.MOD:
+		return &object.Integer{Value: leftVal % rightVal}
 	case token.GT:
 		return nativeBoolToBooleanObject(leftVal > rightVal)
 	case token.LT:

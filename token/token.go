@@ -33,6 +33,7 @@ const (
 	// Operators
 	ASSIGN = "="
 	PLUS   = "+"
+	MOD    = "%"
 
 	// Delimiters
 	COMMA     = ","
